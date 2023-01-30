@@ -1,18 +1,16 @@
 import { Text, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 type ButtonProps = {
     text: string;
+    toggleMode: () => void;
 };
 
 export function Button(props: ButtonProps) {
-    const { navigate } = useNavigation();
-
     return (
         <TouchableOpacity
             activeOpacity={0.7}
-            className="w-full bg-violet-500 shadow-md shadow-violet-500/50 px-28 py-6 rounded-xl"
-            onPress={() => navigate('new')}
+            className="w-full h-16 justify-center bg-violet-500 shadow-md shadow-violet-500/50 rounded-md"
+            onPress={props.toggleMode}
         >
             <Text className="text-xs text-center font-extrabold text-violet-200">
                 {props.text}
