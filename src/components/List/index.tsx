@@ -12,41 +12,49 @@ export function List(props: any) {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 100 }}
             >
-                {props.itemList.map((item: any) => {
+                {props.itemList.map((item: any, index: number) => {
                     return (
                         <View
-                            key={item.id}
-                            className="w-full flex-1 h-20 px-6 mb-4 flex flex-row justify-between items-center bg-violet-200 rounded-3xl"
+                            key={index}
+                            className="w-full h-20 px-6 mb-4 flex-row justify-between items-center bg-violet-200 rounded-3xl"
                         >
                             <View className="flex">
                                 <Text className="text-2xl font-bold text-background">
-                                    R$ {item.price}
+                                    R$ {item.price.toFixed(2)}
                                 </Text>
-                                <Text className="text-lg text-background">
-                                    {item.title}
+                                <Text className="text-xl     font-semibold text-background">
+                                    {item.name}
                                 </Text>
                             </View>
                             <View className="flex-row items-center gap-4">
                                 {/* botões adicionar/remover */}
                                 <View className="flex flex-row items-center justify-around">
+                                    {/* botão diminuir quantidade */}
                                     <TouchableOpacity
                                         activeOpacity={0.7}
                                         className="bg-violet-100 rounded-full p-2"
+                                        onPress={() =>
+                                            props.decreaseItem(index)
+                                        }
                                     >
                                         <Feather
-                                            name="plus"
+                                            name="minus"
                                             size={32}
                                         />
                                     </TouchableOpacity>
                                     <Text className="mx-4 text-3xl text-center font-bold text-background">
-                                        {item.amount}
+                                        {item.quantity}
                                     </Text>
+                                    {/* botão de aumentar quantidade */}
                                     <TouchableOpacity
                                         activeOpacity={0.7}
                                         className="bg-violet-100 rounded-full p-2"
+                                        onPress={() =>
+                                            props.increaseItem(index)
+                                        }
                                     >
                                         <Feather
-                                            name="minus"
+                                            name="plus"
                                             size={32}
                                         />
                                     </TouchableOpacity>
@@ -56,9 +64,7 @@ export function List(props: any) {
                                 <View>
                                     <TouchableOpacity
                                         activeOpacity={0.7}
-                                        onPress={() =>
-                                            props.deleteItem(item.id)
-                                        }
+                                        onPress={() => props.deleteItem(index)}
                                     >
                                         <Feather
                                             name="trash"
@@ -73,7 +79,7 @@ export function List(props: any) {
                 })}
             </ScrollView>
             <Text className="py-12 text-center text-2xl font-bold text-violet-200">
-                Total: R$ {props.total}
+                Total: R$ {props.total.toFixed(2)}
             </Text>
         </View>
     );

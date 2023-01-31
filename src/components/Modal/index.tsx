@@ -12,13 +12,15 @@ import { Feather } from '@expo/vector-icons';
 
 type ModalProps = {
     isOpen: boolean;
+    valueName: string;
+    valuePrice: string;
+    valueQuantity: string;
 
     toggleMode: () => void;
-    itemEnviado: () => void;
-
-    changeTitle: (text: string) => void;
+    addItem: () => void;
+    changeName: (text: string) => void;
     changePrice: (text: string) => void;
-    changeAmount: (text: string) => void;
+    changeQuantity: (text: string) => void;
 };
 
 const DismissKeyboard = ({ children }: any) => {
@@ -64,7 +66,8 @@ export function ModalNewItem(props: ModalProps) {
                             placeholder="arroz, carne, leite..."
                             placeholderTextColor={colors.zinc[500]}
                             className="h-12 mt-2 pl-4 rounded-lg bg-zinc-800 text-violet-200 focus:border-2 focus:border-violet-600"
-                            onChangeText={(text) => props.changeTitle(text)}
+                            value={props.valueName}
+                            onChangeText={(text) => props.changeName(text)}
                         />
 
                         <View className="flex-row items-center justify-between mt-2">
@@ -77,6 +80,7 @@ export function ModalNewItem(props: ModalProps) {
                                     placeholder="0,00"
                                     placeholderTextColor={colors.zinc[500]}
                                     className="h-12 mt-2 text-center rounded-lg bg-zinc-800 text-violet-200 focus:border-2 focus:border-violet-600"
+                                    value={props.valuePrice}
                                     onChangeText={(text) =>
                                         props.changePrice(text)
                                     }
@@ -91,8 +95,9 @@ export function ModalNewItem(props: ModalProps) {
                                     placeholder="0"
                                     placeholderTextColor={colors.zinc[500]}
                                     className="h-12 mt-2 text-center rounded-lg bg-zinc-800 text-violet-200 focus:border-2 focus:border-violet-600"
+                                    value={props.valueQuantity}
                                     onChangeText={(text) =>
-                                        props.changeAmount(text)
+                                        props.changeQuantity(text)
                                     }
                                 />
                             </View>
@@ -100,7 +105,7 @@ export function ModalNewItem(props: ModalProps) {
                         <TouchableOpacity
                             activeOpacity={0.7}
                             className="h-16 flex-row items-center justify-center mt-6 bg-violet-500 shadow-md shadow-violet-500/50 rounded-md"
-                            onPress={props.itemEnviado}
+                            onPress={props.addItem}
                         >
                             <Feather
                                 name="check"
