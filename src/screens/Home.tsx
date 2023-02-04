@@ -4,6 +4,7 @@ import { Button } from '../components/Button/Button';
 import { List } from '../components/List';
 import { useState } from 'react';
 import { ModalNewItem } from '../components/Modal';
+import { ModalAttPrice } from '../components/ModalAttPrice';
 
 const DismissKeyboard = ({ children }: any) => {
     return (
@@ -21,6 +22,8 @@ interface IItem {
 
 export function Home() {
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalChangePriceVisible, setModalChangePriceVisible] =
+        useState(true);
 
     const [name, setName] = useState('');
     const [quantity, setQuantity] = useState('');
@@ -71,6 +74,16 @@ export function Home() {
         setItems(newQuantity);
     };
 
+    const handleToggleModalChangePrice = () => {
+        setModalChangePriceVisible((prevState) => !prevState);
+    };
+
+    const handleChangePrice = (index: number) => {
+        setModalChangePriceVisible((prevState) => !prevState);
+
+        console.log('clicou nesse safado ', index);
+    };
+
     return (
         <DismissKeyboard>
             <View className="flex-1 px-8 pt-20 items-center justify-between bg-background">
@@ -83,6 +96,7 @@ export function Home() {
                         increaseItem={handleQuantityIncrease}
                         decreaseItem={handleQuantityDecrease}
                         total={total}
+                        openModalChangePrice={handleChangePrice}
                     />
                 ) : (
                     <Image source={require('../assets/emptyList.png')} />
@@ -98,6 +112,13 @@ export function Home() {
                     changeName={setName}
                     changePrice={setPrice}
                     changeQuantity={setQuantity}
+                />
+
+                <ModalAttPrice
+                    toggleMode={handleToggleModalChangePrice}
+                    isOpen={modalChangePriceVisible}
+                    valuePrice={price}
+                    changePrice={setPrice}
                 />
 
                 <View className="w-full mb-20">
