@@ -13,9 +13,10 @@ import { Feather } from '@expo/vector-icons';
 type ModalProps = {
     isOpen: boolean;
     toggleMode: () => void;
+    handleChangePrice: () => void;
 
+    newPrice: (text: string) => void;
     valuePrice: string;
-    changePrice: (text: string) => void;
 };
 
 const DismissKeyboard = ({ children }: any) => {
@@ -64,7 +65,7 @@ export function ModalAttPrice(props: ModalProps) {
                                     className="h-12 text-2xl mt-2 text-center rounded-lg bg-zinc-800 text-violet-200 focus:border-2 focus:border-violet-600"
                                     value={props.valuePrice}
                                     onChangeText={(text) =>
-                                        props.changePrice(text)
+                                        props.newPrice(text)
                                     }
                                 />
                             </View>
@@ -72,6 +73,7 @@ export function ModalAttPrice(props: ModalProps) {
                         <TouchableOpacity
                             activeOpacity={0.7}
                             className="w-full h-16 flex-row items-center justify-center mt-6 bg-violet-500 shadow-md shadow-violet-500/50 rounded-md"
+                            onPress={props.handleChangePrice}
                         >
                             <Feather
                                 name="check"

@@ -12,17 +12,17 @@ export function List(props: any) {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 100 }}
             >
-                {props.itemList.map((item: any, index: number) => {
+                {props.itemList.map((item: any) => {
                     return (
                         <View
-                            key={index}
+                            key={item.id}
                             className="w-full px-6 py-2 mb-4 flex-row justify-between items-center bg-violet-200 rounded-3xl"
                         >
                             <View className="w-2/6 flex">
                                 <TouchableOpacity
                                     activeOpacity={0.7}
                                     onPress={() =>
-                                        props.openModalChangePrice(index)
+                                        props.toggleModalChangePrice(item.id)
                                     }
                                 >
                                     <Text className="text-xl  font-bold text-background">
@@ -43,7 +43,7 @@ export function List(props: any) {
                                         activeOpacity={0.7}
                                         className="bg-violet-100 rounded-full p-2"
                                         onPress={() =>
-                                            props.decreaseItem(index)
+                                            props.decreaseItem(item.id)
                                         }
                                     >
                                         <Feather
@@ -61,7 +61,7 @@ export function List(props: any) {
                                         activeOpacity={0.7}
                                         className="bg-violet-100 rounded-full p-2"
                                         onPress={() =>
-                                            props.increaseItem(index)
+                                            props.increaseItem(item.id)
                                         }
                                     >
                                         <Feather
@@ -76,7 +76,7 @@ export function List(props: any) {
                             <View>
                                 <TouchableOpacity
                                     activeOpacity={0.7}
-                                    onPress={() => props.deleteItem(index)}
+                                    onPress={() => props.deleteItem(item.id)}
                                 >
                                     <Feather
                                         name="trash"

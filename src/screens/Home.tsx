@@ -1,10 +1,17 @@
-import { View, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+    View,
+    Image,
+    TouchableWithoutFeedback,
+    Keyboard,
+    LogBox,
+} from 'react-native';
 import { Header } from '../components/Header/Header';
 import { Button } from '../components/Button/Button';
 import { List } from '../components/List';
 import { useState } from 'react';
 import { ModalNewItem } from '../components/Modal';
 import { ModalAttPrice } from '../components/ModalAttPrice';
+import uuid from 'react-native-uuid';
 
 const DismissKeyboard = ({ children }: any) => {
     return (
@@ -15,6 +22,7 @@ const DismissKeyboard = ({ children }: any) => {
 };
 
 interface IItem {
+    id: string;
     name: string;
     quantity: number;
     price: number;
@@ -23,22 +31,29 @@ interface IItem {
 export function Home() {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalChangePriceVisible, setModalChangePriceVisible] =
-        useState(true);
+        useState(false);
 
     const [name, setName] = useState('');
     const [quantity, setQuantity] = useState('');
     const [price, setPrice] = useState('');
 
     const [items, setItems] = useState<IItem[]>([]);
+
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+    const [newPrice, setNewPrice] = useState('');
+
     const handleAddItem = () => {
-        setItems([
-            ...items,
-            {
-                name,
-                quantity: Number(quantity),
-                price: Number(price.replace(',', '.')),
-            },
-        ]);
+        const newData = {
+            id: uuid.v4().toString(),
+            name,
+            quantity: Number(quantity),
+            price: Number(price.replace(',', '.')),
+        };
+
+        setItems([...items, newData]);
+
+        console.log(items);
+
         setName('');
         setPrice('');
         setQuantity('');
@@ -50,38 +65,62 @@ export function Home() {
         0
     );
 
-    const handleDeleteItem = (index: number) => {
-        setItems(items.filter((item, i) => i !== index));
+    const handleDeleteItem = (id: string) => {
+        setItems(items.filter((item) => item.id !== id));
     };
 
     const handleToggleModal = () => {
         setModalVisible((prevState) => !prevState);
     };
 
-    const handleQuantityIncrease = (index: number) => {
+    const handleQuantityIncrease = (id: string) => {
         const newQuantity = [...items];
+        const foundItem = newQuantity.find((item) => item.id === id);
 
-        newQuantity[index].quantity++;
+        if (foundItem && foundItem.quantity !== undefined) {
+            foundItem.quantity++;
+        }
 
         setItems(newQuantity);
     };
 
-    const handleQuantityDecrease = (index: number) => {
+    const handleQuantityDecrease = (id: string) => {
         const newQuantity = [...items];
+        const foundItem = newQuantity.find((item) => item.id === id);
 
-        newQuantity[index].quantity--;
+        if (foundItem && foundItem.quantity !== undefined) {
+            foundItem.quantity--;
+        }
 
         setItems(newQuantity);
     };
 
-    const handleToggleModalChangePrice = () => {
+    const handleToggleChangePriceModal = (id: string) => {
+        setSelectedItemId(id);
+        setNewPrice('');
+
         setModalChangePriceVisible((prevState) => !prevState);
     };
 
-    const handleChangePrice = (index: number) => {
-        setModalChangePriceVisible((prevState) => !prevState);
+    const handleChangePrice = (id: string, newPrice: number) => {
+        const newItems = [...items];
+        const foundItem = newItems.find((item) => item.id === id);
 
-        console.log('clicou nesse safado ', index);
+        if (foundItem) {
+            foundItem.price = newPrice;
+        }
+
+        setItems(newItems);
+    };
+
+    const handleConfirmChangePrice = () => {
+        if (selectedItemId) {
+            handleChangePrice(
+                selectedItemId,
+                Number(newPrice.replace(',', '.'))
+            );
+        }
+        setModalChangePriceVisible(false);
     };
 
     return (
@@ -96,7 +135,7 @@ export function Home() {
                         increaseItem={handleQuantityIncrease}
                         decreaseItem={handleQuantityDecrease}
                         total={total}
-                        openModalChangePrice={handleChangePrice}
+                        toggleModalChangePrice={handleToggleChangePriceModal}
                     />
                 ) : (
                     <Image source={require('../assets/emptyList.png')} />
@@ -105,20 +144,21 @@ export function Home() {
                 <ModalNewItem
                     toggleMode={handleToggleModal}
                     isOpen={modalVisible}
-                    addItem={handleAddItem}
                     valueName={name}
                     valueQuantity={quantity}
                     valuePrice={price}
                     changeName={setName}
                     changePrice={setPrice}
                     changeQuantity={setQuantity}
+                    addItem={handleAddItem}
                 />
 
                 <ModalAttPrice
-                    toggleMode={handleToggleModalChangePrice}
+                    toggleMode={handleToggleChangePriceModal}
+                    valuePrice={newPrice}
+                    newPrice={setNewPrice}
                     isOpen={modalChangePriceVisible}
-                    valuePrice={price}
-                    changePrice={setPrice}
+                    handleChangePrice={handleConfirmChangePrice}
                 />
 
                 <View className="w-full mb-20">
